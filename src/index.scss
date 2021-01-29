@@ -1,5 +1,5 @@
 .header {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .btn-back {
@@ -11,6 +11,46 @@
   display: block;
   border-color: #343a40;
   border-right-color: transparent;
+}
+
+.modal {
+  &-header,
+  &-footer {
+    border: none;
+  }
+}
+
+.btn-add-article {
+  margin-bottom: 20px;
+  vertical-align: inherit;
+}
+
+.success-add {
+  color: green;
+  padding-left: 20px;
+  font-size: 14px;
+}
+
+.cntrl-article {
+  float: right;
+
+  button {
+    font-size: 14px;
+    padding: 0;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  button + button {
+    margin-left: 15px;
+    color: red;
+
+    &:hover {
+      color: red;
+    }
+  }
 }
 
 .page-wrapper {

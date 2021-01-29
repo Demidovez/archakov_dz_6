@@ -1,7 +1,9 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 
-function PostCard({ post }) {
+function PostCard({ post, onEdit, onRemove }) {
   const [isImageLoadig, setIsImageLoading] = React.useState(true);
 
   return (
@@ -14,7 +16,7 @@ function PostCard({ post }) {
         className={isImageLoadig && "loading"}
       />
       <Card.Body>
-        <Card.Title as={"a"} href={`post/${post.id}`} className="h5">
+        <Card.Title as={Link} to={`post/${post.id}`} className="h5">
           {post.title}
         </Card.Title>
         <Card.Text>{post.text}</Card.Text>
@@ -29,6 +31,14 @@ function PostCard({ post }) {
             minute: "numeric",
           })}
         </small>
+        <div className="cntrl-article">
+          <Button variant="link" onClick={onEdit}>
+            Изменить
+          </Button>
+          <Button variant="link" onClick={onRemove}>
+            Удалить
+          </Button>
+        </div>
       </Card.Footer>
     </Card>
   );

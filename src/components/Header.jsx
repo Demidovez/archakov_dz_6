@@ -5,13 +5,16 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
+import { Link, useHistory } from "react-router-dom";
 
 function Header(props) {
   const [searchValue, setSearchValue] = React.useState("");
 
+  const history = useHistory();
+
   const onChangeSearch = ({ target }) => setSearchValue(target.value);
 
-  const onStartSearch = () => (window.location.href = `/search?title=${searchValue}`);
+  const onStartSearch = () => history.push(`/search?title=${searchValue}`);
 
   return (
     <div className="header">
@@ -19,10 +22,10 @@ function Header(props) {
         <Container>
           <Navbar.Brand href="/">Мой блог</Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link href="/" active={props.current === ""}>
+            <Nav.Link as={Link} to="/">
               Главная
             </Nav.Link>
-            <Nav.Link href="/about" active={props.current === "about"}>
+            <Nav.Link as={Link} to="/about">
               Обо мне
             </Nav.Link>
           </Nav>
@@ -34,7 +37,11 @@ function Header(props) {
               value={searchValue}
               onChange={onChangeSearch}
             />
-            <Button className="btn btn-primary" onClick={onStartSearch} disabled={!searchValue}>
+            <Button
+              className="btn btn-primary"
+              onClick={onStartSearch}
+              disabled={!searchValue}
+            >
               Найти
             </Button>
           </Form>
