@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import { Link, useHistory } from "react-router-dom";
 
-function Header(props) {
+function Header() {
   const [searchValue, setSearchValue] = React.useState("");
 
   const history = useHistory();
@@ -37,11 +37,7 @@ function Header(props) {
               value={searchValue}
               onChange={onChangeSearch}
             />
-            <Button
-              className="btn btn-primary"
-              onClick={onStartSearch}
-              disabled={!searchValue}
-            >
+            <Button className="btn btn-primary" onClick={onStartSearch} disabled={!searchValue}>
               Найти
             </Button>
           </Form>

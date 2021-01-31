@@ -3,29 +3,47 @@ import React from "react";
 export const ContextApp = React.createContext();
 
 export const initialState = {
-  posts: [],
-  postComments: {},
+  articles: [],
+  articleComments: {},
 };
 
 export const reducer = (state, action) => {
   switch (action.type) {
-    case "ADD_ALL_POSTS":
+    case "ADD_ALL_ARTICLES":
       return {
         ...state,
-        posts: action.payload,
+        articles: action.payload.sort((prevArt, nextArt) => nextArt.id - prevArt.id),
       };
     case "ADD_COMMENTS":
       return {
         ...state,
-        postComments: {
-          ...state.postComments,
-          [action.payload.postId]: action.payload.comments,
+        articleComments: {
+          ...state.articleComments,
+          [action.payload.articleId]: action.payload.comments,
         },
       };
     case "ADD_ARTICLE":
       return {
         ...state,
-        posts: [action.payload, ...state.posts],
+        articles: [action.payload, ...state.articles],
+      };
+    case "REMOVE_ARTICLE":
+      return {
+        ...state,
+        articles: [...state.articles.filter((article) => article.id !== action.payload)],
+        articleComments: {
+          ...state.articleComments,
+          [action.payload]: null,
+        },
+      };
+    case "EDIT_ARTICLE":
+      return {
+        ...state,
+        articles: [
+          ...state.articles.map((article) =>
+            article.id === action.payload.id ? action.payload : article,
+          ),
+        ],
       };
     default:
       return state;

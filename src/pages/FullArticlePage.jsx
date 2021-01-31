@@ -1,58 +1,54 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
-import PostCard from "../components/PostCard";
+import ArticleCard from "../components/ArticleCard";
 import CommentCard from "../components/CommentCard";
 import Loader from "../components/Loader";
 import axios from "axios";
 import { ContextApp } from "../reducer";
 import { useParams, useHistory } from "react-router-dom";
 
-function FullPostPage() {
+function FullArticlePage() {
   const [state, dispatch] = React.useContext(ContextApp);
 
-  const { id: postId } = useParams();
+  const { id: articleId } = useParams();
   const history = useHistory();
 
-  const post = state.posts.find((post) => post.id === postId);
-  const comments = state.postComments[postId];
+  const article = state.articles.find((article) => parseInt(article.id) === parseInt(articleId));
+  const comments = state.articleComments[articleId];
 
   React.useEffect(() => {
     if (!comments) {
       axios
-        .get(
-          `https://5c3755177820ff0014d92711.mockapi.io/posts/${postId}/comments`
-        )
+        .get(`https://5c3755177820ff0014d92711.mockapi.io/articles/${articleId}/comments`)
         .then((res) =>
           dispatch({
             type: "ADD_COMMENTS",
             payload: {
-              postId,
+              articleId,
               comments: res.data,
             },
-          })
+          }),
         );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="full-post-page">
-      <Button
-        className="btn btn-primary btn-back"
-        onClick={() => history.goBack()}
-      >
+    <div className="full-article-page">
+      <Button className="btn btn-primary btn-back" onClick={() => history.goBack()}>
         Назад
       </Button>
-      {post ? <PostCard post={post} /> : <Loader />}
-      <div className="comments-wrapper">
-        <p>Комментарии:</p>
-        {comments &&
-          comments.map((comment) => (
+      {article ? <ArticleCard article={article} /> : <Loader />}
+      {comments && !!comments.length && (
+        <div className="comments-wrapper">
+          <p>Комментарии:</p>
+          {comments.map((comment) => (
             <CommentCard comment={comment} key={comment.id} />
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
 
-export default FullPostPage;
+export default FullArticlePage;

@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row";
 import axios from "axios";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import PostCard from "../components/PostCard";
+import ArticleCard from "../components/ArticleCard";
 import Loader from "../components/Loader";
 import AddArticleModal from "../components/AddArticleModal";
 import { ContextApp } from "../reducer";
@@ -24,13 +24,24 @@ function HomePage() {
   const onAddArticle = () => {
     const article = {
       ...newArticle,
-      id: state.posts[state.posts.length - 1].id + 1,
+      id: state.articles.length ? parseInt(state.articles[0].id) + 1 : 1,
       createdAt: new Date(),
     };
 
     axios
       .post("https://5c3755177820ff0014d92711.mockapi.io/articles", article)
-      .then((res) => setIsAddedArticle(true));
+      .then(() => setIsAddedArticle(true))
+      // Добавил автоматическое создание 2-х комментов, чтобы сделать 5-е задание
+      .then(() =>
+        axios.post(`https://5c3755177820ff0014d92711.mockapi.io/articles/${article.id}/comments`, {
+          avatar: `https://robohash.org/${article.title}.png`,
+        }),
+      )
+      .then(() =>
+        axios.post(`https://5c3755177820ff0014d92711.mockapi.io/articles/${article.id}/comments`, {
+          avatar: `https://robohash.org/${article.text}.png`,
+        }),
+      );
 
     dispatch({
       type: "ADD_ARTICLE",
@@ -47,28 +58,17 @@ function HomePage() {
       [target.name]: target.value,
     });
 
-  const onEditArticle = () => {};
-  const onRemoveArticle = () => {};
-
   return (
     <div className="home-page">
-      <Button
-        variant="primary"
-        className="btn-add-article"
-        onClick={handleShow}
-      >
+      <Button variant="primary" className="btn-add-article" onClick={handleShow}>
         Добавить
       </Button>
       {isAddedArticle && <span className="success-add">Статья добавлена!</span>}
-      {!state.posts.length && <Loader />}
+      {!state.articles.length && <Loader />}
       <Row lg={3} md={3} sm={2} xs={1}>
-        {state.posts.map((post) => (
-          <Col key={post.id} className="post-card-wrapper">
-            <PostCard
-              post={post}
-              onEdit={onEditArticle}
-              onRemove={onRemoveArticle}
-            />
+        {state.articles.map((article) => (
+          <Col key={article.id} className="article-card-wrapper">
+            <ArticleCard article={article} />
           </Col>
         ))}
       </Row>
